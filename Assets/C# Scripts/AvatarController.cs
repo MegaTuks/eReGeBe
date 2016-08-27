@@ -8,7 +8,9 @@ public class AvatarController : MonoBehaviour
 	private Vector2 velocity;
 	private float rotation;
 
-	private const float MAX_VELOCITY = 0.25f;
+	private const float MAX_VELOCITY = 25f;
+	private const float TORQUE = 300f;
+	private const float ACCELERATION = 150f;
 
 	// Use this for initialization
 	void Start ()
@@ -38,22 +40,70 @@ public class AvatarController : MonoBehaviour
 			changeColor();
 		}
 
+		float z = transform.rotation.eulerAngles.z;
 		if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
 		{
-			velocity.x = -MAX_VELOCITY;
-			velocity.y = 0f;
+			if (velocity.x > -MAX_VELOCITY)
+			{
+				velocity.x -= ACCELERATION * Time.deltaTime;
+			}
+
+			if (z < 315f)
+			{
+				transform.Rotate(Vector3.forward, TORQUE * Time.deltaTime);
+			}
 		}
 		else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow))
 		{
-			velocity.x = MAX_VELOCITY;
-			velocity.y = 0f;
+			if (velocity.x < MAX_VELOCITY)
+			{
+				velocity.x += ACCELERATION * Time.deltaTime;
+			}
+
+			if (z > 225f)
+			{
+				transform.Rotate(Vector3.forward, -TORQUE * Time.deltaTime);
+			}
 		}
 		else {
-			velocity.x = 0f;
-			velocity.y = 0f;
+			if (velocity.x > 0f)
+			{
+				velocity.x -= ACCELERATION * Time.deltaTime;
+				if (velocity.x < 0f)
+				{
+					velocity.x = 0f;
+				}
+			}
+			else if (velocity.x < 0f)
+			{
+				velocity.x += ACCELERATION * Time.deltaTime;
+				if (velocity.x > 0f)
+				{
+					velocity.x = 0f;
+				}
+			}
+
+			if (z > 270f)
+			{
+				transform.Rotate(Vector3.forward, -TORQUE * Time.deltaTime);
+
+				if (transform.rotation.eulerAngles.z < 270f)
+				{
+					transform.rotation = Quaternion.Euler(0, 0, 270f);
+				}
+			}
+			else if (z < 270f)
+			{
+				transform.Rotate(Vector3.forward, TORQUE * Time.deltaTime);
+
+				if (transform.rotation.eulerAngles.z > 270f)
+				{
+					transform.rotation = Quaternion.Euler(0, 0, 270f);
+				}
+			}
 		}
 
-		transform.position += (Vector3)velocity;
+		transform.position += (Vector3) velocity * Time.deltaTime;
 	}
 
 	private bool isNewTouchTapped()
