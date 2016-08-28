@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+[SerializeField]
+public class HighScore  {
 
-public class HighScore : MonoBehaviour {
-
+    public long[] mHighScores;
 	// Use this for initialization
 	void Start () {
 	
