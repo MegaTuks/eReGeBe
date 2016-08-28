@@ -86,7 +86,7 @@ public class AvatarController : MonoBehaviour
 		return result;
 	}
 
-	private void changeColor()
+	public void changeColor()
 	{
 		if (mColor == RGB.Color.Blue)
 		{
