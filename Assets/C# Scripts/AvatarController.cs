@@ -1,21 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
+
 
 public class AvatarController : MonoBehaviour
 {
-	private int[] mLastFrameTouches;
+    public AudioSource mBip;
+    private int[] mLastFrameTouches;
 	private RGB.Color mColor;
 	private Rigidbody2D mRigidbody;
-
+    private LevelManager mLvlManager;
+    
 	private Color[] mPalette;
 
 	private const float TORQUE = 20f;
 	private const float ANGULAR_DRAG = 150f;
-	private const float ACCELERATION = 25f;
+	private const float ACCELERATION = 20f;    
 
 	// Use this for initialization
 	void Start ()
 	{
+        mLvlManager = GameObject.Find("Nivel").GetComponent<LevelManager>();
 		mPalette = new Color[]{ new Color(0f, 1f, 1f), new Color(1f, 0.3f, 0.3f), new Color(0.4f, 1f, 0.4f) };
 		mLastFrameTouches = null;
 		mColor = RGB.Color.Blue;
@@ -149,4 +154,21 @@ public class AvatarController : MonoBehaviour
 			gameObject.GetComponent<Renderer>().material.color = mPalette[0];
 		}
 	}
+
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.gameObject.tag == "Bullet")
+        {
+            if(mColor == col.gameObject.GetComponent<ObstacleController>().mObstacleType)
+            {
+                mLvlManager.mCombo += 5;
+                mBip.Play();
+                Destroy(col.gameObject);
+            } else
+            {
+                PlayerPrefs.SetInt("Score", mLvlManager.mScore);
+                SceneManager.LoadScene("GameOver");
+            }
+        }
+    }
 }

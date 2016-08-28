@@ -28,15 +28,15 @@ public class ObstacleController : MonoBehaviour
         mOsbstacleImage = gameObject.GetComponent<SpriteRenderer>();
         if (type == RGB.Color.Blue)
         {
-            mOsbstacleImage.color = Color.blue;
+            mOsbstacleImage.color = new Color(0f, 1f, 1f);
         }
         else if(type == RGB.Color.Red)
         {
-            mOsbstacleImage.color = Color.red;
+            mOsbstacleImage.color = new Color(1f, 0.3f, 0.3f);
         }
         else if (type == RGB.Color.Green)
         {
-            mOsbstacleImage.color = Color.green;
+            mOsbstacleImage.color = new Color(0.4f, 1f, 0.4f);
         }
     }
 	// Update is called once per frame

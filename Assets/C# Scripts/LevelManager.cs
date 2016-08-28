@@ -5,19 +5,20 @@ using UnityEngine.UI;
 public class LevelManager : MonoBehaviour
 {
     public int mScore;
-    public int mCombo;
-    public float mScoreWaitTimer = 1.0f;
+    public int mCombo = 0;
+    public float mScoreWaitTimer = 0.2f;
     public float mScoreCrono;
     public bool mSpawnerFlag1 = false;
     public bool mSpawnerFlag2 = false;
     public bool mSpawnerFlag3 = false;
+    public Outline mScoreLine;
 
     public Text mTextScore;
 	// Use this for initialization
 	void Start ()
     {
         mScoreCrono = mScoreWaitTimer;
-        GameObject spawner = Instantiate(Resources.Load("Spawner"), gameObject.transform.position, Quaternion.identity) as GameObject;
+        Instantiate(Resources.Load("Spawner"), gameObject.transform.position, Quaternion.identity);
     }
 
     void spawnSpawner(float center)
@@ -31,7 +32,7 @@ public class LevelManager : MonoBehaviour
         mScoreCrono -= Time.deltaTime;
         if(mScoreCrono <= 0)
         {
-            mScore += 5;
+            mScore += 5 + mCombo;
             mTextScore.text = "Score: " + mScore.ToString();
             mScoreCrono = mScoreWaitTimer;
         }
@@ -40,16 +41,20 @@ public class LevelManager : MonoBehaviour
         {
             mSpawnerFlag1 = true;
             spawnSpawner(2f);
+            mTextScore.fontSize = 65;
         }
         else if (mScore >= 100000  && !mSpawnerFlag2)
         {
             mSpawnerFlag2 = true;
             spawnSpawner(-2f);
+            mTextScore.fontSize = 70;
+            mScoreLine.effectColor = Color.yellow;
         }
         else if (mScore >= 500000 && !mSpawnerFlag3)
         {
             mSpawnerFlag3 = true;
             spawnSpawner(-3f);
+            mTextScore.fontSize = 75;
         }
 
 
