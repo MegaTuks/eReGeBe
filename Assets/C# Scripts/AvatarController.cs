@@ -18,6 +18,7 @@ public class AvatarController : MonoBehaviour
 	private const float TORQUE = 20f;
 	private const float ANGULAR_DRAG = 150f;
 	private const float ACCELERATION = 12f;    
+	private const float ACCELEROMETER_THRESHOLD = 0.25f;
 
 	// Use this for initialization
 	void Start ()
@@ -110,7 +111,7 @@ public class AvatarController : MonoBehaviour
 
 	private void updateForces()
 	{
-		if (!mIsDead && (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A) || Input.acceleration.x < -0.5f))
+		if (!mIsDead && (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A) || Input.acceleration.x < -ACCELEROMETER_THRESHOLD))
 		{
 			if (mRigidbody.rotation < -45f)
 			{
@@ -118,7 +119,7 @@ public class AvatarController : MonoBehaviour
 			}
 			mRigidbody.AddForce(new Vector2(-ACCELERATION, 0));
 		}
-		else if (!mIsDead && (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D) || Input.acceleration.x > 0.5f))
+		else if (!mIsDead && (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D) || Input.acceleration.x > ACCELEROMETER_THRESHOLD))
 		{
 			if (mRigidbody.rotation > -135f)
 			{
