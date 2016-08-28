@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class AvatarController : MonoBehaviour
 {
     public AudioSource mBip;
+    public SpriteRenderer mNextStep;
 
 	private bool mIsDead;
     private int[] mLastFrameTouches;
@@ -29,7 +30,8 @@ public class AvatarController : MonoBehaviour
 		mPalette = new Color[]{ new Color(0f, 1f, 1f), new Color(1f, 0.3f, 0.3f), new Color(0.4f, 1f, 0.4f) };
 		mLastFrameTouches = null;
 		mColor = RGB.Color.Blue;
-		gameObject.GetComponent<Renderer>().material.color = mPalette[0];
+        mNextStep.color = mPalette[1];
+        gameObject.GetComponent<Renderer>().material.color = mPalette[0];
 		mRigidbody = GetComponent<Rigidbody2D>();
 		mIsDead = false;
 	}
@@ -106,17 +108,20 @@ public class AvatarController : MonoBehaviour
 		{
 			mColor = RGB.Color.Red;
 			gameObject.GetComponent<Renderer>().material.color = mPalette[1];
+            mNextStep.color = mPalette[2];
 		}
 		else if (mColor == RGB.Color.Red)
 		{
 			mColor = RGB.Color.Green;
 			gameObject.GetComponent<Renderer>().material.color = mPalette[2];
-		}
+            mNextStep.color = mPalette[0];
+        }
 		else
 		{
 			mColor = RGB.Color.Blue;
 			gameObject.GetComponent<Renderer>().material.color = mPalette[0];
-		}
+            mNextStep.color = mPalette[1];
+        }
 	}
 
 	private void updateForces()
