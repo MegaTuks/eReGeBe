@@ -15,7 +15,7 @@ public class AvatarController : MonoBehaviour
 
 	private const float TORQUE = 20f;
 	private const float ANGULAR_DRAG = 150f;
-	private const float ACCELERATION = 20f;    
+	private const float ACCELERATION = 15f;    
 
 	// Use this for initialization
 	void Start ()

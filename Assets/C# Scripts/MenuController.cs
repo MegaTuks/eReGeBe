@@ -10,7 +10,10 @@ public class MenuController : MonoBehaviour {
 
     void Start () 
 	{
-		mInsPanel.SetActive (false);
+        PlayerPrefs.SetInt("Third", 110);
+        PlayerPrefs.SetInt("Second", 5250);
+        PlayerPrefs.SetInt("First", 10235);
+        mInsPanel.SetActive (false);
 		mCredPanel.SetActive (false);
 	}
 
