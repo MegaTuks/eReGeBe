@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class Spawner : MonoBehaviour {
+    //variables of obstalces 
     public RGB.Color mObstacleColor;
     public int mObstacleNumbah;
     public int mObstacleType;
@@ -9,11 +10,13 @@ public class Spawner : MonoBehaviour {
     public GameObject mObstacleTypeInstance;
     // variable for patterns
     public int mPatternType;
-    //variable of instance
+    //variable of spawnerbehavior
     public Vector3 mSpawnerSpeedTransition;
     public float mSpawnerLimits;
     public float mSpawnTime;
     public float mTimer;
+    public float mWaitTime = 1.2f;
+    public float mWaitTimer;
     public int mSpawnChange;
     public int mSpawnedObjects;
     private int mDirection;
@@ -33,9 +36,10 @@ public class Spawner : MonoBehaviour {
                 mObstacleColor = RGB.Color.Blue;
                 break;
         }
-        mSpawnTime = Random.Range(0.3f, .8f);
+        mWaitTimer = mWaitTime;
+        mSpawnTime = Random.Range(0.3f, .6f);
         mSpawnerSpeedTransition = new Vector3(Random.Range(1, 5), 0, 0);
-        mSpawnerLimits = Random.Range(1.0f, 7.5f);
+        mSpawnerLimits = Random.Range(1.5f, 7.5f);
         mPatternType = Random.Range(1, 5);
         mDirection = 1;
         mTimer = mSpawnTime;
@@ -58,7 +62,8 @@ public class Spawner : MonoBehaviour {
                 mObstacleColor = RGB.Color.Blue;
                 break;
         }
-        mSpawnTime = Random.Range(0.3f, .8f);
+        mWaitTimer = mWaitTime;
+        mSpawnTime = Random.Range(0.3f, .6f);
         mSpawnerSpeedTransition = new Vector3(Random.Range(1, 5), 0, 0);
         mSpawnerLimits = Random.Range(1.0f, 7.5f);
         mPatternType = Random.Range(1, 5);
@@ -69,20 +74,35 @@ public class Spawner : MonoBehaviour {
         setPrefab();
     }
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
 	    if(mTimer >= 0)
         {
             mTimer = mTimer - Time.deltaTime;
             usePatternSpawner();
-        } else {
-            mSpawnedObjects--;
-            Debug.Log(mSpawnedObjects);
-            if(mSpawnedObjects == 0)
+        }
+        else
+        {
+            
+            if (mSpawnedObjects == 0)
             {
-                refreshSpawner();
+                if (mWaitTimer >= 0)
+                {
+                    Debug.Log("entro?");
+                    mWaitTimer = mWaitTimer - Time.deltaTime;
+                 }
+                else
+                { 
+                    refreshSpawner();
+                    mWaitTimer = mWaitTime;
+                }
             }
-            mTimer = mSpawnTime;
-            usePatternInstance(); 
+            else
+            {
+                mSpawnedObjects--;
+                mTimer = mSpawnTime;
+                usePatternInstance();
+            }           
         }
 	}
 
@@ -103,7 +123,7 @@ public class Spawner : MonoBehaviour {
                 }
                 break;
             case 2:
-                if (gameObject.transform.position.x > .5 * mSpawnerLimits)
+                if (gameObject.transform.position.x >  mSpawnerLimits)
                 {
                     mDirection = 1;
                 }
@@ -127,7 +147,7 @@ public class Spawner : MonoBehaviour {
                 {
                     mDirection = 1;
                 }
-                else if (gameObject.transform.position.x < -.5 * mSpawnerLimits)
+                else if (gameObject.transform.position.x <  mSpawnerLimits)
                 {
                     mDirection = -1;
                 }
@@ -142,24 +162,24 @@ public class Spawner : MonoBehaviour {
         switch (mPatternType)
         {
             case 1:
-                mObstacleSpeed = new Vector3(0, 1, 0);
+                mObstacleSpeed = new Vector3(0, 2, 0);
                 bullet = Instantiate(mObstacleTypeInstance, gameObject.transform.position, Quaternion.identity) as GameObject;
                 bullet.GetComponent<ObstacleController>().setObstacle(mObstacleColor, mObstacleSpeed);
                 break;
             case 2:
             case 4:
-                mObstacleSpeed = new Vector3(0, 2, 0);
+                mObstacleSpeed = new Vector3(0, 3, 0);
                 bullet = Instantiate(mObstacleTypeInstance, gameObject.transform.position, Quaternion.identity) as GameObject;
                 bullet.GetComponent<ObstacleController>().setObstacle(mObstacleColor, mObstacleSpeed);
                 break;
             case 3:
-                mObstacleSpeed = new Vector3(1, 1, 0);
+                mObstacleSpeed = new Vector3(2, 2, 0);
                 bullet = Instantiate(mObstacleTypeInstance, new Vector3(gameObject.transform.position.x-1f, gameObject.transform.position.y ), Quaternion.identity) as GameObject;
                 bullet.GetComponent<ObstacleController>().setObstacle(mObstacleColor, mObstacleSpeed);
-                mObstacleSpeed = new Vector3(0, 1, 0);
+                mObstacleSpeed = new Vector3(0, 2, 0);
                 bullet = Instantiate(mObstacleTypeInstance, new Vector3(gameObject.transform.position.x, gameObject.transform.position.y - 1f), Quaternion.identity) as GameObject;
                 bullet.GetComponent<ObstacleController>().setObstacle(mObstacleColor, mObstacleSpeed);
-                mObstacleSpeed = new Vector3(-1, 1, 0);
+                mObstacleSpeed = new Vector3(-2, 2, 0);
                 bullet = Instantiate(mObstacleTypeInstance, new Vector3(gameObject.transform.position.x + 1f, gameObject.transform.position.y), Quaternion.identity) as GameObject;
                 bullet.GetComponent<ObstacleController>().setObstacle(mObstacleColor, mObstacleSpeed);
                 break;
