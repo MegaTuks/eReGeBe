@@ -21,10 +21,12 @@ public class GameOver : MonoBehaviour {
         int changeScore = PlayerPrefs.GetInt("Score");
         if (PlayerPrefs.GetInt("First") < changeScore)
         {
+            PlayerPrefs.SetInt("Second", PlayerPrefs.GetInt("First"));
             PlayerPrefs.SetInt("First", changeScore);
         }
         else if(PlayerPrefs.GetInt("First") > changeScore && changeScore > PlayerPrefs.GetInt("Second"))
         {
+            PlayerPrefs.SetInt("Third", PlayerPrefs.GetInt("Second"));
             PlayerPrefs.SetInt("Second", changeScore);
         }
         else if (PlayerPrefs.GetInt("First") > changeScore && changeScore < PlayerPrefs.GetInt("Second") && changeScore > PlayerPrefs.GetInt("Third"))

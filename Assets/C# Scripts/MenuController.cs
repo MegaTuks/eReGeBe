@@ -10,7 +10,7 @@ public class MenuController : MonoBehaviour {
 
     void Start () 
 	{
-		mInsPanel.SetActive (false);
+        mInsPanel.SetActive (false);
 		mCredPanel.SetActive (false);
 	}
 

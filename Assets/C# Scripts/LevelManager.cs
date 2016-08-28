@@ -43,14 +43,14 @@ public class LevelManager : MonoBehaviour
             spawnSpawner(2f);
             mTextScore.fontSize = 65;
         }
-        else if (mScore >= 100000  && !mSpawnerFlag2)
+        else if (mScore >= 15000  && !mSpawnerFlag2)
         {
             mSpawnerFlag2 = true;
             spawnSpawner(-2f);
             mTextScore.fontSize = 70;
             mScoreLine.effectColor = Color.yellow;
         }
-        else if (mScore >= 500000 && !mSpawnerFlag3)
+        else if (mScore >= 30000 && !mSpawnerFlag3)
         {
             mSpawnerFlag3 = true;
             spawnSpawner(-3f);
