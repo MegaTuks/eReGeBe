@@ -49,7 +49,9 @@ public class AvatarController : MonoBehaviour
 		{
 			changeColor();
 		}
+
 		updateForces();
+
 		if (mRigidbody.rotation < -135f)
 		{
 			mRigidbody.angularVelocity = 0f;
@@ -107,7 +109,7 @@ public class AvatarController : MonoBehaviour
 
 	private void updateForces()
 	{
-		if (!mIsDead && (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A) || Input.acceleration.x < 0))
+		if (!mIsDead && (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A) || Input.acceleration.x < -0.5f))
 		{
 			if (mRigidbody.rotation < -45f)
 			{
@@ -115,7 +117,7 @@ public class AvatarController : MonoBehaviour
 			}
 			mRigidbody.AddForce(new Vector2(-ACCELERATION, 0));
 		}
-		else if (!mIsDead && (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D) || Input.acceleration.x > 0))
+		else if (!mIsDead && (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D) || Input.acceleration.x > 0.5f))
 		{
 			if (mRigidbody.rotation > -135f)
 			{
