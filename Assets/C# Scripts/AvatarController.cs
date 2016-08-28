@@ -17,7 +17,8 @@ public class AvatarController : MonoBehaviour
 
 	private const float TORQUE = 20f;
 	private const float ANGULAR_DRAG = 150f;
-	private const float ACCELERATION = 12f;    
+	private const float ACCELERATION = 100f;    
+	private const float MAX_VELOCITY = 10f;
 	private const float ACCELEROMETER_THRESHOLD = 0.25f;
 
 	// Use this for initialization
@@ -63,6 +64,15 @@ public class AvatarController : MonoBehaviour
 		{
 			mRigidbody.angularVelocity = 0f;
 			mRigidbody.rotation = -45f;
+		}
+
+		if (mRigidbody.velocity.x > MAX_VELOCITY)
+		{
+			mRigidbody.velocity = new Vector2(MAX_VELOCITY, 0);
+		}
+		else if (mRigidbody.velocity.x < -MAX_VELOCITY)
+		{
+			mRigidbody.velocity = new Vector2(-MAX_VELOCITY, 0);
 		}
 	}
 
