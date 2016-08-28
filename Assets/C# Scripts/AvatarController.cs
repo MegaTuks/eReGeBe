@@ -20,7 +20,7 @@ public class AvatarController : MonoBehaviour
 	private const float ANGULAR_DRAG = 150f;
 	private const float ACCELERATION = 100f;    
 	private const float MAX_VELOCITY = 10f;
-	private const float ACCELEROMETER_THRESHOLD = 0.25f;
+	private const float ACCELEROMETER_THRESHOLD = 0.15f;
 
 	// Use this for initialization
 	void Start ()
