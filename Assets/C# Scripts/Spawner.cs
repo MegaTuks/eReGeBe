@@ -103,7 +103,6 @@ public class Spawner : MonoBehaviour {
             {
                 if (mWaitTimer >= 0)
                 {
-                    Debug.Log("entro?");
                     mWaitTimer = mWaitTimer - Time.deltaTime;
                  }
                 else
