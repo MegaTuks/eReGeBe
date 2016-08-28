@@ -6,13 +6,14 @@ using UnityEngine.SceneManagement;
 public class AvatarController : MonoBehaviour
 {
     public AudioSource mBip;
+
+	private bool mIsDead;
     private int[] mLastFrameTouches;
 	private RGB.Color mColor;
 	private Rigidbody2D mRigidbody;
     private LevelManager mLvlManager;
 	private Animator mAnimator;
 	private Color[] mPalette;
-	private bool mIsDead;
 
 	private const float TORQUE = 20f;
 	private const float ANGULAR_DRAG = 150f;
@@ -185,5 +186,10 @@ public class AvatarController : MonoBehaviour
 	void GameOver()
 	{
 		SceneManager.LoadScene("GameOver");
+	}
+
+	public bool isDead()
+	{
+		return mIsDead;
 	}
 }
