@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Spawner : MonoBehaviour {
     public RGB.Color mObstacleColor;
+    public int mObstacleNumbah;
     public int mObstacleType;
     public Vector3 mObstacleSpeed;
     public GameObject mObstacleTypeInstance;
@@ -13,20 +14,60 @@ public class Spawner : MonoBehaviour {
     public float mSpawnerLimits;
     public float mSpawnTime;
     public float mTimer;
+    public int mSpawnChange;
+    public int mSpawnedObjects;
     private int mDirection;
 
     // Use this for initialization
     void Start () {
+        mObstacleNumbah = Random.Range(1, 4);
+        switch (mObstacleNumbah)
+        {
+            case 1:
+                mObstacleColor = RGB.Color.Red; 
+                break;
+            case 2:
+                mObstacleColor = RGB.Color.Green;
+                break;
+            case 3:
+                mObstacleColor = RGB.Color.Blue;
+                break;
+        }
         mSpawnTime = Random.Range(0.3f, .8f);
         mSpawnerSpeedTransition = new Vector3(Random.Range(1, 5), 0, 0);
         mSpawnerLimits = Random.Range(1.0f, 7.5f);
-        mPatternType = Random.Range(1, 4);
+        mPatternType = Random.Range(1, 5);
         mDirection = 1;
         mTimer = mSpawnTime;
+        mSpawnedObjects = Random.Range(8, 20);
         mObstacleType = Random.Range(1, 4);
         setPrefab();
     }
-	
+	void refreshSpawner()
+    {
+        mObstacleNumbah = Random.Range(1, 4);
+        switch (mObstacleNumbah)
+        {
+            case 1:
+                mObstacleColor = RGB.Color.Red;
+                break;
+            case 2:
+                mObstacleColor = RGB.Color.Green;
+                break;
+            case 3:
+                mObstacleColor = RGB.Color.Blue;
+                break;
+        }
+        mSpawnTime = Random.Range(0.3f, .8f);
+        mSpawnerSpeedTransition = new Vector3(Random.Range(1, 5), 0, 0);
+        mSpawnerLimits = Random.Range(1.0f, 7.5f);
+        mPatternType = Random.Range(1, 5);
+        mDirection = 1;
+        mTimer = mSpawnTime;
+        mObstacleType = Random.Range(1, 4);
+        mSpawnedObjects = Random.Range(8, 20);
+        setPrefab();
+    }
 	// Update is called once per frame
 	void Update () {
 	    if(mTimer >= 0)
@@ -34,6 +75,12 @@ public class Spawner : MonoBehaviour {
             mTimer = mTimer - Time.deltaTime;
             usePatternSpawner();
         } else {
+            mSpawnedObjects--;
+            Debug.Log(mSpawnedObjects);
+            if(mSpawnedObjects == 0)
+            {
+                refreshSpawner();
+            }
             mTimer = mSpawnTime;
             usePatternInstance(); 
         }
@@ -60,7 +107,7 @@ public class Spawner : MonoBehaviour {
                 {
                     mDirection = 1;
                 }
-                else if (gameObject.transform.position.x < -.5 * mSpawnerLimits)
+                else if (gameObject.transform.position.x < 0 )
                 {
                     mDirection = -1;
                 }
@@ -71,6 +118,16 @@ public class Spawner : MonoBehaviour {
                     mDirection = 1;
                 }
                 else if (gameObject.transform.position.x < -1 * mSpawnerLimits)
+                {
+                    mDirection = -1;
+                }
+                break;
+            case 4:
+                if (gameObject.transform.position.x > 0)
+                {
+                    mDirection = 1;
+                }
+                else if (gameObject.transform.position.x < -.5 * mSpawnerLimits)
                 {
                     mDirection = -1;
                 }
@@ -90,6 +147,7 @@ public class Spawner : MonoBehaviour {
                 bullet.GetComponent<ObstacleController>().setObstacle(mObstacleColor, mObstacleSpeed);
                 break;
             case 2:
+            case 4:
                 mObstacleSpeed = new Vector3(0, 2, 0);
                 bullet = Instantiate(mObstacleTypeInstance, gameObject.transform.position, Quaternion.identity) as GameObject;
                 bullet.GetComponent<ObstacleController>().setObstacle(mObstacleColor, mObstacleSpeed);

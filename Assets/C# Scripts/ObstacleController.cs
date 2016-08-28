@@ -34,7 +34,7 @@ public class ObstacleController : MonoBehaviour
         {
             mOsbstacleImage.color = Color.red;
         }
-        else if (type == RGB.Color.Red)
+        else if (type == RGB.Color.Green)
         {
             mOsbstacleImage.color = Color.green;
         }
