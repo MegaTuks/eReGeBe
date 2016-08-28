@@ -10,8 +10,9 @@ public class AvatarController : MonoBehaviour
 	private RGB.Color mColor;
 	private Rigidbody2D mRigidbody;
     private LevelManager mLvlManager;
-    
+	private Animator mAnimator;
 	private Color[] mPalette;
+	private bool mIsDead;
 
 	private const float TORQUE = 20f;
 	private const float ANGULAR_DRAG = 150f;
@@ -21,11 +22,13 @@ public class AvatarController : MonoBehaviour
 	void Start ()
 	{
         mLvlManager = GameObject.Find("Nivel").GetComponent<LevelManager>();
+		mAnimator = GetComponent<Animator>();
 		mPalette = new Color[]{ new Color(0f, 1f, 1f), new Color(1f, 0.3f, 0.3f), new Color(0.4f, 1f, 0.4f) };
 		mLastFrameTouches = null;
 		mColor = RGB.Color.Blue;
 		gameObject.GetComponent<Renderer>().material.color = mPalette[0];
 		mRigidbody = GetComponent<Rigidbody2D>();
+		mIsDead = false;
 	}
 	
 	void Update ()
@@ -46,60 +49,7 @@ public class AvatarController : MonoBehaviour
 		{
 			changeColor();
 		}
-
-		if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A) || Input.acceleration.x < 0)
-		{
-			if (mRigidbody.rotation < -45f)
-			{
-				mRigidbody.AddTorque(TORQUE);
-			}
-			mRigidbody.AddForce(new Vector2(-ACCELERATION, 0));
-		}
-		else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D) || Input.acceleration.x > 0)
-		{
-			if (mRigidbody.rotation > -135f)
-			{
-				mRigidbody.AddTorque(-TORQUE);
-			}
-			mRigidbody.AddForce(new Vector2(ACCELERATION, 0));
-		}
-		else
-		{
-			if (mRigidbody.rotation < -90f)
-			{
-				mRigidbody.rotation = mRigidbody.rotation + ANGULAR_DRAG * Time.deltaTime;
-				if (mRigidbody.rotation > -90f)
-				{
-					mRigidbody.rotation = -90f;
-				}
-			}
-			else if (mRigidbody.rotation > -90f)
-			{
-				mRigidbody.rotation = mRigidbody.rotation - ANGULAR_DRAG * Time.deltaTime;
-				if (mRigidbody.rotation < -90f)
-				{
-					mRigidbody.rotation = -90f;
-				}
-			}
-
-			if (mRigidbody.velocity.x < 0f)
-			{
-				mRigidbody.velocity = new Vector2(mRigidbody.velocity.x + ACCELERATION * Time.deltaTime, 0f);
-				if (mRigidbody.velocity.x > 0f)
-				{
-					mRigidbody.velocity = new Vector2(0, 0);
-				}
-			}
-			else if (mRigidbody.velocity.x > 0f)
-			{
-				mRigidbody.velocity = new Vector2(mRigidbody.velocity.x - ACCELERATION * Time.deltaTime, 0f);
-				if (mRigidbody.velocity.x < 0f)
-				{
-					mRigidbody.velocity = new Vector2(0, 0);
-				}
-			}
-		}
-
+		updateForces();
 		if (mRigidbody.rotation < -135f)
 		{
 			mRigidbody.angularVelocity = 0f;
@@ -155,6 +105,62 @@ public class AvatarController : MonoBehaviour
 		}
 	}
 
+	private void updateForces()
+	{
+		if (!mIsDead && (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A) || Input.acceleration.x < 0))
+		{
+			if (mRigidbody.rotation < -45f)
+			{
+				mRigidbody.AddTorque(TORQUE);
+			}
+			mRigidbody.AddForce(new Vector2(-ACCELERATION, 0));
+		}
+		else if (!mIsDead && (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D) || Input.acceleration.x > 0))
+		{
+			if (mRigidbody.rotation > -135f)
+			{
+				mRigidbody.AddTorque(-TORQUE);
+			}
+			mRigidbody.AddForce(new Vector2(ACCELERATION, 0));
+		}
+		else
+		{
+			if (mRigidbody.rotation < -90f)
+			{
+				mRigidbody.rotation = mRigidbody.rotation + ANGULAR_DRAG * Time.deltaTime;
+				if (mRigidbody.rotation > -90f)
+				{
+					mRigidbody.rotation = -90f;
+				}
+			}
+			else if (mRigidbody.rotation > -90f)
+			{
+				mRigidbody.rotation = mRigidbody.rotation - ANGULAR_DRAG * Time.deltaTime;
+				if (mRigidbody.rotation < -90f)
+				{
+					mRigidbody.rotation = -90f;
+				}
+			}
+
+			if (mRigidbody.velocity.x < 0f)
+			{
+				mRigidbody.velocity = new Vector2(mRigidbody.velocity.x + ACCELERATION * Time.deltaTime, 0f);
+				if (mRigidbody.velocity.x > 0f)
+				{
+					mRigidbody.velocity = new Vector2(0, 0);
+				}
+			}
+			else if (mRigidbody.velocity.x > 0f)
+			{
+				mRigidbody.velocity = new Vector2(mRigidbody.velocity.x - ACCELERATION * Time.deltaTime, 0f);
+				if (mRigidbody.velocity.x < 0f)
+				{
+					mRigidbody.velocity = new Vector2(0, 0);
+				}
+			}
+		}
+	}
+
     void OnTriggerEnter2D(Collider2D col)
     {
         if (col.gameObject.tag == "Bullet")
@@ -167,8 +173,15 @@ public class AvatarController : MonoBehaviour
             } else
             {
                 PlayerPrefs.SetInt("Score", mLvlManager.mScore);
-                SceneManager.LoadScene("GameOver");
+				gameObject.GetComponent<Renderer>().material.color = Color.white;
+				mAnimator.Play("explosion");
+				mIsDead = true;
             }
         }
     }
+
+	void GameOver()
+	{
+		SceneManager.LoadScene("GameOver");
+	}
 }
