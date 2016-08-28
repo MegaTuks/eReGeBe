@@ -11,6 +11,7 @@ public class Spawner : MonoBehaviour {
     // variable for patterns
     public int mPatternType;
     //variable of spawnerbehavior
+    public float mSpawnerPosition;
     public Vector3 mSpawnerSpeedTransition;
     public float mSpawnerLimits;
     public float mSpawnTime;
@@ -40,7 +41,7 @@ public class Spawner : MonoBehaviour {
         mSpawnTime = Random.Range(0.3f, .6f);
         mSpawnerSpeedTransition = new Vector3(Random.Range(1, 5), 0, 0);
         mSpawnerLimits = Random.Range(1.5f, 7.5f);
-        mPatternType = Random.Range(1, 5);
+        mPatternType = Random.Range(1, 6);
         mDirection = 1;
         mTimer = mSpawnTime;
         mSpawnedObjects = Random.Range(8, 20);
@@ -66,7 +67,7 @@ public class Spawner : MonoBehaviour {
         mSpawnTime = Random.Range(0.3f, .6f);
         mSpawnerSpeedTransition = new Vector3(Random.Range(1, 5), 0, 0);
         mSpawnerLimits = Random.Range(1.0f, 7.5f);
-        mPatternType = Random.Range(1, 5);
+        mPatternType = Random.Range(1, 6);
         mDirection = 1;
         mTimer = mSpawnTime;
         mObstacleType = Random.Range(1, 4);
@@ -133,6 +134,7 @@ public class Spawner : MonoBehaviour {
                 }
                 break;
             case 3:
+            case 5:
                 if (gameObject.transform.position.x >   mSpawnerLimits)
                 {
                     mDirection = 1;
@@ -147,7 +149,7 @@ public class Spawner : MonoBehaviour {
                 {
                     mDirection = 1;
                 }
-                else if (gameObject.transform.position.x <  mSpawnerLimits)
+                else if (gameObject.transform.position.x <  -1 * mSpawnerLimits)
                 {
                     mDirection = -1;
                 }
@@ -173,13 +175,21 @@ public class Spawner : MonoBehaviour {
                 bullet.GetComponent<ObstacleController>().setObstacle(mObstacleColor, mObstacleSpeed);
                 break;
             case 3:
-                mObstacleSpeed = new Vector3(2, 2, 0);
+                mObstacleSpeed = new Vector3(1, 2, 0);
                 bullet = Instantiate(mObstacleTypeInstance, new Vector3(gameObject.transform.position.x-1f, gameObject.transform.position.y ), Quaternion.identity) as GameObject;
                 bullet.GetComponent<ObstacleController>().setObstacle(mObstacleColor, mObstacleSpeed);
                 mObstacleSpeed = new Vector3(0, 2, 0);
                 bullet = Instantiate(mObstacleTypeInstance, new Vector3(gameObject.transform.position.x, gameObject.transform.position.y - 1f), Quaternion.identity) as GameObject;
                 bullet.GetComponent<ObstacleController>().setObstacle(mObstacleColor, mObstacleSpeed);
-                mObstacleSpeed = new Vector3(-2, 2, 0);
+                mObstacleSpeed = new Vector3(-1, 2, 0);
+                bullet = Instantiate(mObstacleTypeInstance, new Vector3(gameObject.transform.position.x + 1f, gameObject.transform.position.y), Quaternion.identity) as GameObject;
+                bullet.GetComponent<ObstacleController>().setObstacle(mObstacleColor, mObstacleSpeed);
+                break;
+            case 5:
+                mObstacleSpeed = new Vector3(1, 2, 0);
+                bullet = Instantiate(mObstacleTypeInstance, new Vector3(gameObject.transform.position.x - 1f, gameObject.transform.position.y), Quaternion.identity) as GameObject;
+                bullet.GetComponent<ObstacleController>().setObstacle(mObstacleColor, mObstacleSpeed);
+                mObstacleSpeed = new Vector3(-1, 2, 0);
                 bullet = Instantiate(mObstacleTypeInstance, new Vector3(gameObject.transform.position.x + 1f, gameObject.transform.position.y), Quaternion.identity) as GameObject;
                 bullet.GetComponent<ObstacleController>().setObstacle(mObstacleColor, mObstacleSpeed);
                 break;
@@ -201,5 +211,10 @@ public class Spawner : MonoBehaviour {
                 mObstacleTypeInstance = Resources.Load("Obstacle4") as GameObject;
                 break;
         }
+    }
+
+    public void setXPosition(float xPos)
+    {
+        mSpawnerPosition = xPos;
     }
 }
