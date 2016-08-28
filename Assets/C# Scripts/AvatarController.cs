@@ -5,22 +5,24 @@ public class AvatarController : MonoBehaviour
 {
 	private int[] mLastFrameTouches;
 	private RGB.Color mColor;
-	private Vector2 velocity;
-	private float rotation;
+	private Rigidbody2D mRigidbody;
 
-	private const float MAX_VELOCITY = 25f;
-	private const float TORQUE = 300f;
-	private const float ACCELERATION = 150f;
+	private Color[] mPalette;
+
+	private const float TORQUE = 20f;
+	private const float ANGULAR_DRAG = 150f;
+	private const float ACCELERATION = 25f;
 
 	// Use this for initialization
 	void Start ()
 	{
+		mPalette = new Color[]{ new Color(0f, 1f, 1f), new Color(1f, 0.3f, 0.3f), new Color(0.4f, 1f, 0.4f) };
 		mLastFrameTouches = null;
 		mColor = RGB.Color.Blue;
-		velocity = new Vector2(0, 0);
+		gameObject.GetComponent<Renderer>().material.color = mPalette[0];
+		mRigidbody = GetComponent<Rigidbody2D>();
 	}
 	
-	// Update is called once per frame
 	void Update ()
 	{
 		bool shouldChangeColor = false;
@@ -40,70 +42,69 @@ public class AvatarController : MonoBehaviour
 			changeColor();
 		}
 
-		float z = transform.rotation.eulerAngles.z;
 		if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
 		{
-			if (velocity.x > -MAX_VELOCITY)
+			if (mRigidbody.rotation < -45f)
 			{
-				velocity.x -= ACCELERATION * Time.deltaTime;
+				mRigidbody.AddTorque(TORQUE);
 			}
-
-			if (z < 315f)
-			{
-				transform.Rotate(Vector3.forward, TORQUE * Time.deltaTime);
-			}
+			mRigidbody.AddForce(new Vector2(-ACCELERATION, 0));
 		}
-		else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow))
+		else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
 		{
-			if (velocity.x < MAX_VELOCITY)
+			if (mRigidbody.rotation > -135f)
 			{
-				velocity.x += ACCELERATION * Time.deltaTime;
+				mRigidbody.AddTorque(-TORQUE);
 			}
-
-			if (z > 225f)
-			{
-				transform.Rotate(Vector3.forward, -TORQUE * Time.deltaTime);
-			}
+			mRigidbody.AddForce(new Vector2(ACCELERATION, 0));
 		}
-		else {
-			if (velocity.x > 0f)
+		else
+		{
+			if (mRigidbody.rotation < -90f)
 			{
-				velocity.x -= ACCELERATION * Time.deltaTime;
-				if (velocity.x < 0f)
+				mRigidbody.rotation = mRigidbody.rotation + ANGULAR_DRAG * Time.deltaTime;
+				if (mRigidbody.rotation > -90f)
 				{
-					velocity.x = 0f;
+					mRigidbody.rotation = -90f;
 				}
 			}
-			else if (velocity.x < 0f)
+			else if (mRigidbody.rotation > -90f)
 			{
-				velocity.x += ACCELERATION * Time.deltaTime;
-				if (velocity.x > 0f)
+				mRigidbody.rotation = mRigidbody.rotation - ANGULAR_DRAG * Time.deltaTime;
+				if (mRigidbody.rotation < -90f)
 				{
-					velocity.x = 0f;
+					mRigidbody.rotation = -90f;
 				}
 			}
 
-			if (z > 270f)
+			if (mRigidbody.velocity.x < 0f)
 			{
-				transform.Rotate(Vector3.forward, -TORQUE * Time.deltaTime);
-
-				if (transform.rotation.eulerAngles.z < 270f)
+				mRigidbody.velocity = new Vector2(mRigidbody.velocity.x + ACCELERATION * Time.deltaTime, 0f);
+				if (mRigidbody.velocity.x > 0f)
 				{
-					transform.rotation = Quaternion.Euler(0, 0, 270f);
+					mRigidbody.velocity = new Vector2(0, 0);
 				}
 			}
-			else if (z < 270f)
+			else if (mRigidbody.velocity.x > 0f)
 			{
-				transform.Rotate(Vector3.forward, TORQUE * Time.deltaTime);
-
-				if (transform.rotation.eulerAngles.z > 270f)
+				mRigidbody.velocity = new Vector2(mRigidbody.velocity.x - ACCELERATION * Time.deltaTime, 0f);
+				if (mRigidbody.velocity.x < 0f)
 				{
-					transform.rotation = Quaternion.Euler(0, 0, 270f);
+					mRigidbody.velocity = new Vector2(0, 0);
 				}
 			}
 		}
 
-		transform.position += (Vector3) velocity * Time.deltaTime;
+		if (mRigidbody.rotation < -135f)
+		{
+			mRigidbody.angularVelocity = 0f;
+			mRigidbody.rotation = -135f;
+		}
+		else if (mRigidbody.rotation > -45f)
+		{
+			mRigidbody.angularVelocity = 0f;
+			mRigidbody.rotation = -45f;
+		}
 	}
 
 	private bool isNewTouchTapped()
@@ -135,17 +136,17 @@ public class AvatarController : MonoBehaviour
 		if (mColor == RGB.Color.Blue)
 		{
 			mColor = RGB.Color.Red;
-			gameObject.GetComponent<Renderer>().material.color = Color.red;
+			gameObject.GetComponent<Renderer>().material.color = mPalette[1];
 		}
 		else if (mColor == RGB.Color.Red)
 		{
 			mColor = RGB.Color.Green;
-			gameObject.GetComponent<Renderer>().material.color = Color.green;
+			gameObject.GetComponent<Renderer>().material.color = mPalette[2];
 		}
 		else
 		{
 			mColor = RGB.Color.Blue;
-			gameObject.GetComponent<Renderer>().material.color = Color.blue;
+			gameObject.GetComponent<Renderer>().material.color = mPalette[0];
 		}
 	}
 }
