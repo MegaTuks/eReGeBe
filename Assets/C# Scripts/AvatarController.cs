@@ -187,6 +187,7 @@ public class AvatarController : MonoBehaviour
             if(mColor == col.gameObject.GetComponent<ObstacleController>().mObstacleType)
             {
                 mLvlManager.mCombo += 5;
+                mLvlManager.mComboCounter++;
                 mBip.Play();
                 Destroy(col.gameObject);
             } else

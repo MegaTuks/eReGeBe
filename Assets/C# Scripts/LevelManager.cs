@@ -6,13 +6,16 @@ public class LevelManager : MonoBehaviour
 {
     public int mScore;
     public int mCombo = 0;
+    public int mComboCounter = 1;
     public float mScoreWaitTimer = 0.2f;
     public float mScoreCrono;
+    public bool mBiggerScore = true;
     public bool mSpawnerFlag1 = false;
     public bool mSpawnerFlag2 = false;
     public bool mSpawnerFlag3 = false;
     public Outline mScoreLine;
 
+    public Text mComboText;
     public Text mTextScore;
 	public AvatarController mAvatar;
 
@@ -40,7 +43,17 @@ public class LevelManager : MonoBehaviour
 	private void updateScore()
 	{
 		mScoreCrono -= Time.deltaTime;
-		if(mScoreCrono <= 0)
+        mComboText.text = "X" + mComboCounter.ToString();
+        if(mComboCounter % 10 == 0 && mComboCounter <60 && mBiggerScore)
+        {
+            mComboText.fontSize += 2;
+            mBiggerScore = false;
+        } else if(mComboCounter % 10 != 0)
+        {
+            mBiggerScore = true;
+        }
+
+            if (mScoreCrono <= 0)
 		{
 			mScore += 5 + mCombo;
 			mTextScore.text = "Score: " + mScore.ToString();
