@@ -4,29 +4,35 @@ using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour {
 
-	public GameObject insPanel;
-	public GameObject credPanel;
-	void Start () 
+	public GameObject mInsPanel;
+	public GameObject mCredPanel;
+    
+
+    void Start () 
 	{
-		insPanel.SetActive (false);
-		credPanel.SetActive (false);
+		mInsPanel.SetActive (false);
+		mCredPanel.SetActive (false);
 	}
 
-	public void lookCredits () {
-		credPanel.SetActive (true);
+	public void lookCredits ()
+    {
+		mCredPanel.SetActive (true);
 	}
 
-	public void closeCredits () {
-		credPanel.SetActive (false);
+	public void closeCredits ()
+    {
+		mCredPanel.SetActive (false);
 	}
 	public void LookInstructions ()
 	{
-		insPanel.SetActive (true);
+		mInsPanel.SetActive (true);
 	}
+
 	public void CloseIns ()
 	{
-		insPanel.SetActive (false);
+		mInsPanel.SetActive (false);
 	}
+
 	public void StartGame () 
 	{
 		SceneManager.LoadScene ("Nivel");
